@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RAG Simulator</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background:#0f172a;
+    color:white;
+    padding:30px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+}
+
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:16px;
+    margin-bottom:20px;
+}
+
+textarea,input{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:10px;
+    border:none;
+    background:#0f172a;
+    color:white;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+}
+
+.chunk{
+    background:#0f172a;
+    padding:12px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.step{
+    margin-top:20px;
+}
+
+h1{
+    color:#38bdf8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>RAG Simulator</h1>
+
+<div class="card">
+
+<h2>Knowledge Base</h2>
+
+<textarea id="docs" rows="10">
+RAG stands for Retrieval-Augmented Generation.
+
+Chunking splits documents into smaller parts.
+
+Embeddings convert text into vectors.
+
+Vector databases retrieve relevant chunks.
+
+The retrieved chunks are sent to the LLM with the user query.
+</textarea>
+
+</div>
+
+<div class="card">
+
+<h2>User Query</h2>
+
+<input id="query" value="How does RAG work?" />
+
+<button onclick="runRAG()">Run Simulation</button>
+
+</div>
+
+<div id="output"></div>
+
+</div>
+
+<script>
+
+function runRAG(){
+
+    let docs = document.getElementById("docs").value;
+
+    let query = document.getElementById("query").value;
+
+    let chunks = docs.split(".");
+
+    let html = "";
+
+    html += `
+    <div class="card">
+        <h2>Step 1: Chunking</h2>
+    `;
+
+    chunks.forEach((chunk,index)=>{
+
+        if(chunk.trim() !== ""){
+
+            html += `
+            <div class="chunk">
+                Chunk ${index+1}: ${chunk}
+            </div>
+            `;
+        }
+    });
+
+    html += `</div>`;
+
+    html += `
+    <div class="card">
+        <h2>Step 2: Retrieval</h2>
+
+        <div class="chunk">
+            User Query: ${query}
+        </div>
+
+        <div class="chunk">
+            Retrieved Context:
+            Embeddings convert text into vectors.
+        </div>
+    </div>
+    `;
+
+    html += `
+    <div class="card">
+        <h2>Step 3: Final Prompt Sent to LLM</h2>
+
+        <div class="chunk">
+            SYSTEM: You are helpful AI<br><br>
+
+            CONTEXT: Embeddings convert text into vectors.<br><br>
+
+            USER: ${query}
+        </div>
+    </div>
+    `;
+
+    html += `
+    <div class="card">
+        <h2>Final AI Response</h2>
+
+        <div class="chunk">
+            RAG improves LLM responses by retrieving relevant information before generating an answer.
+        </div>
+    </div>
+    `;
+
+    document.getElementById("output").innerHTML = html;
+}
+
+runRAG();
+
+</script>
+
+</body>
+</html>
